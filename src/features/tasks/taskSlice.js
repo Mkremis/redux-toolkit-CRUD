@@ -14,6 +14,7 @@ const initialState = [
     completed: false,
   },
 ];
+
 export const taskSlice = createSlice({
   name: 'tasks',
   initialState,
@@ -24,10 +25,25 @@ export const taskSlice = createSlice({
       return [...state, { id, ...payload }];
       // state.push(payload);
     },
-    deleteTask: (state, action) => {},
+    deleteTask: (state, action) => {
+        const updatedState = state.filter((task)=>task.id !== action.payload)
+        return updatedState
+    },
+     updateTask: (state, action) => {
+      const { id, title, description, completed } = action.payload;
+      const foundTask = state.find(task=>task.id === id)
+      if(foundTask){
+        foundTask.title = title;
+        foundTask.description = description;
+        foundTask.completed = completed;
+      }
+      
+    },
   },
+
+  
 });
 
 export default taskSlice.reducer;
 
-export const { addTask } = taskSlice.actions;
+export const { addTask, deleteTask, updateTask } = taskSlice.actions;

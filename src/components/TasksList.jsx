@@ -1,49 +1,47 @@
 import { useSelector } from 'react-redux';
-import {
-  Card,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableHeaderCell,
-  TableBody,
-  Title,
-  Badge,
-} from '@tremor/react';
+import { deleteTask } from '../features/tasks/taskSlice';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const TasksList = () => {
+  const dispatch = useDispatch()
   const tasks = useSelector((state) => state.tasks);
-  console.log('TaskList', tasks);
-  return (
-    <Card>
-      <div className="flex">
-        <Title>TODO LIST</Title>
-        <Badge color="blue" className="ml-1">
-          {tasks.length}
-        </Badge>
+  const handleDelete =(id)=>dispatch(deleteTask(id))
+
+  return ( 
+    <section>
+       <header className='mb-3'>
+    <nav className='flex justify-between items-center p-3 text-2xl font-bold'>
+      <div>
+         <Link to='/'>Taks List</Link>
       </div>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableHeaderCell>Id</TableHeaderCell>
-            <TableHeaderCell>Title</TableHeaderCell>
-            <TableHeaderCell>Description</TableHeaderCell>
-            <TableHeaderCell>Completed</TableHeaderCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {tasks.length > 0 &&
+    <div>
+         <Link to='/create-task' className='bg-indigo-600 px-2 py-1 rounded-sm text-sm'>Create Task</Link>
+      </div>
+    </nav>
+  </header>
+      <h2>TODO LIST - <span>{tasks.length}</span></h2> 
+
+      <div className='grid grid-cols-3 gap-4'>
+         {tasks.length > 0 &&
             tasks.map((task) => (
-              <TableRow key={task.id}>
-                <TableCell>{task.id}</TableCell>
-                <TableCell>{task.title}</TableCell>
-                <TableCell>{task.description}</TableCell>
-                <TableCell>{task.completed}</TableCell>
-              </TableRow>
-            ))}
-        </TableBody>
-      </Table>
-    </Card>
+              <div key={task.id} className="bg-neutral-800 p-4 rounded-md">
+                <header className='flex justify-between gap-x-10'>
+                  <h3>{task.title}</h3>
+                  <div className='flex gap-x-3'>
+                      <Link to={`/edit-task/${task.id}`} className='bg-zinc-600 px-2 py-1 text-xs rounded-md'>Edit</Link>
+                  <button onClick={()=>handleDelete(task.id)} className='bg-red-500 px-2 py-1 text-xs rounded-md'>Delete</button>
+                  </div>
+                </header>
+                
+                <p>{task.description}</p>
+                <p>{task.completed ?'Yes' :'No'}</p>
+                 
+   </div>))}
+      </div>
+
+      
+    </section>
   );
 };
 

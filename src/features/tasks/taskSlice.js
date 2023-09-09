@@ -17,7 +17,7 @@ const initialState = [
 
 export const taskSlice = createSlice({
   name: 'tasks',
-  initialState,
+  initialState: JSON.parse(localStorage.getItem('tasks')) || initialState,
   reducers: {
     addTask: (state, action) => {
       const { payload } = action;

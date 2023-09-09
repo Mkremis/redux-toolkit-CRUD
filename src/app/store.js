@@ -4,8 +4,11 @@ import {toast} from 'sonner'
 
 const notification = store=>next=>action=>{
   next(action)
+  const tasks = store.getState().tasks
+  localStorage.setItem('tasks', JSON.stringify(tasks))
   const { type, payload } = action;
-  toast.message(`${type} : ${payload}`)
+  const message = type === 'tasks/deleteTask' ?payload :payload.title;
+  toast.message(`${type} : ${message}`)
 }
 
 export const store = configureStore({
